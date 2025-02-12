@@ -7,7 +7,7 @@ def get_first_handle(braid):
     return:
         (p, q) : Where p, q are the start and end points of the handle.
     """
-    def is_handle(braid, (p, q)):
+    def is_handle(braid, p, q):
         """
         Checks if (p, q) is a valid handle in the given braid.
 
@@ -31,14 +31,14 @@ def get_first_handle(braid):
         else:
             return False
     p, q = 0, 0
-    for q in xrange(len(braid.generators)):
-        for k in xrange(q, (p-1), -1):
-            if is_handle(braid, (k, q)):
+    for q in range(len(braid.generators)):
+        for k in range(q, (p-1), -1):
+            if is_handle(braid, k, q):
                 return (k, q)
     else:
         return None
 
-def reduce(braid, (p, q)):
+def reduce(braid, p, q):
     """
     Applies one step of the alphabetical homomorphism on the given handle.
 
@@ -62,7 +62,7 @@ def reduce(braid, (p, q)):
 
 def fully_reduce(braid, print_output=True):
     """
-    Ffully reduces the given braid.
+    Fully reduces the given braid.
     """
     chain = []
     reduced_brd = braid
@@ -71,17 +71,18 @@ def fully_reduce(braid, print_output=True):
         chain.append((reduced_brd, handle))
         if handle == None:
             if print_output:
-                print str(reduced_brd)
+                print (str(reduced_brd))
             break
         p, q = handle
         if print_output:
             if reduced_brd.pref_notation == 'alpha':
-                print str(reduced_brd)[:p] + '[' + \
+                print (str(reduced_brd)[:p] + '[' + \
                       str(reduced_brd)[p:q+1] + ']' \
-                    + str(reduced_brd)[q+1:]
+                    + str(reduced_brd)[q+1:])
             else:
-                print str(reduced_brd)
-        reduced_brd = reduce(reduced_brd, handle)
+                print (str(reduced_brd))
+        reduced_brd = reduce(reduced_brd, handle[0], handle[1])
+    print('\n\n\nTHE REDUCED BRAID IS \n', reduced_brd, '\n')
     return (reduced_brd, chain)
 
 def compare(b1, b2, print_output=True):
@@ -89,21 +90,26 @@ def compare(b1, b2, print_output=True):
     Compares two braids b1 and b2. Returns true if equal.
     """
     if print_output:
-        print 'b1: ', str(b1)
-        print 'b2: ', str(b2)
-        print 'b1*inv(b2): ', str(b1*b2.inverse())
-        print 'Reducing b1 * inv(b2)...'
+        print ('b1: ', str(b1))
+        print ('b2: ', str(b2))
+        print ('b1*inv(b2): ', str(b1*b2.inverse()))
+        print ('Reducing b1 * inv(b2)...')
         print 
     reduced, chain = fully_reduce(b1*b2.inverse(), print_output)
     if reduced.generators == []:
         if print_output:
-            print 'b1 == b2 :)'
+            print ('b1 == b2 :)')
             return True
     else:
         if print_output:
-            print 'b1 != b2'
+            print ('b1 != b2')
         return False
 
 # a = Braid([2, 2, -1, -2, 3,  2, -1, -2, -3, 2, 3, 2, 2, -1, -2, -3], 'artin')
 # b = Braid([-1, -2, 1, 3, -2, -3, -2, 1, -3, 2, 1, 1], 'artin')
-# compare(a, b, True)
+# a = Braid([1, 1, -1], 'artin')
+# b = Braid([1], 'artin')
+b3 = Braid([-2, -1, -1, -2, -2, -2], 'artin')
+b2 = Braid([-1, -1], 'artin')
+# compare(b2, b3, True)
+fully_reduce(b3)
