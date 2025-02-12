@@ -20,7 +20,7 @@ class Braid(object):
                                else (ord(l) - ord('a') + 1)
                                for l in generators]
         else:
-            raise TypeError, "Check input: Expecting list or alphabetical str"
+            raise TypeError("Check input: Expecting list or alphabetical str")
         self.pref_notation = pref_notation
 
     def main_generator(self):
